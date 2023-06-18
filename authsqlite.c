@@ -123,15 +123,16 @@ openvpn_plugin_func_v1 (openvpn_plugin_handle_t handle, const int type, const ch
 
 	char* username = calloc(1, PARAM_MAX_SIZE+1);
 	char* password = calloc(1, PARAM_MAX_SIZE+1);
-	char* expiry_date = calloc(1, 20);
+	int* expiry_date = calloc(1, 4);
 	char* digpwd = calloc(1, 65);
 	char* sql = calloc(1, 255);
 	int ret;
+	int today = (int)time(NULL);
 
 	/* get username/password from envp string array */
 	memcpy( username, get_env("username", envp), PARAM_MAX_SIZE );
 	memcpy( password, get_env("password", envp), PARAM_MAX_SIZE );
-	memcpy( expiry_date, (int *)time(NULL), 20 );
+	memcpy( expiry_date, &today, sizeof(today) );
 
 	if ( username == NULL || password == NULL || strlen(username) < 1 || strlen(password) < 1 )
 		return OPENVPN_PLUGIN_FUNC_ERROR;
