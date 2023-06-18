@@ -132,7 +132,6 @@ openvpn_plugin_func_v1 (openvpn_plugin_handle_t handle, const int type, const ch
 	/* get username/password from envp string array */
 	memcpy( username, get_env("username", envp), PARAM_MAX_SIZE );
 	memcpy( password, get_env("password", envp), PARAM_MAX_SIZE );
-	memcpy( expiry_date, &today, sizeof(today) );
 
 	if ( username == NULL || password == NULL || strlen(username) < 1 || strlen(password) < 1 )
 		return OPENVPN_PLUGIN_FUNC_ERROR;
@@ -140,7 +139,7 @@ openvpn_plugin_func_v1 (openvpn_plugin_handle_t handle, const int type, const ch
 	genSHA256(password, strlen(password), digpwd);
 
 	/* form our sql statement to lookup database */
-	sprintf( sql, "SELECT username FROM users WHERE username = '%s' AND password = '%s' AND expiry_date > '%d' AND enabled = 1", username, digpwd, expiry_date );
+	sprintf( sql, "SELECT username FROM users WHERE username = '%s' AND password = '%s' AND expiry_date > '%d' AND enabled = 1", username, digpwd, today );
 	free( username );
 	free( password );
 	free( digpwd );
