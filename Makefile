@@ -10,7 +10,7 @@ INCS = -I/usr/include -I/usr/local/include
 
 # there should be no need to adjust lines beyond this one
 CFLAGS = $(INCS) -O3
-LIBS_EXTRA = --no-export-all-symbols --add-stdcall-alias -lsqlite3
+LIBS_EXTRA = -lsqlite3
 
 OBJ      = authsqlite.o ovpnauth-db.o ovpnauth.o sha256.o
 LINKOBJ  = authsqlite.o sha256.o
@@ -43,4 +43,3 @@ ovpnauth-db.o: ovpnauth-db.c
 
 sha256.o: sha256.c sha256.h
 	$(CC) -c sha256.c -o sha256.o $(CFLAGS)
-
