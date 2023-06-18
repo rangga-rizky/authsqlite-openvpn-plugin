@@ -20,6 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "openvpn-plugin.h"
 #include "sqlite3.h"
@@ -122,6 +123,7 @@ openvpn_plugin_func_v1 (openvpn_plugin_handle_t handle, const int type, const ch
 
 	char* username = calloc(1, PARAM_MAX_SIZE+1);
 	char* password = calloc(1, PARAM_MAX_SIZE+1);
+	char* expiry_date = calloc(1, 20);
 	char* digpwd = calloc(1, 65);
 	char* sql = calloc(1, 255);
 	int ret;
@@ -129,6 +131,7 @@ openvpn_plugin_func_v1 (openvpn_plugin_handle_t handle, const int type, const ch
 	/* get username/password from envp string array */
 	memcpy( username, get_env("username", envp), PARAM_MAX_SIZE );
 	memcpy( password, get_env("password", envp), PARAM_MAX_SIZE );
+	memcpy( expiry_date, (int *)time(NULL), 20 );
 
 	if ( username == NULL || password == NULL || strlen(username) < 1 || strlen(password) < 1 )
 		return OPENVPN_PLUGIN_FUNC_ERROR;
@@ -136,10 +139,11 @@ openvpn_plugin_func_v1 (openvpn_plugin_handle_t handle, const int type, const ch
 	genSHA256(password, strlen(password), digpwd);
 
 	/* form our sql statement to lookup database */
-	sprintf( sql, "SELECT username FROM users WHERE username = '%s' AND password = '%s' AND enabled = 1", username, digpwd );
+	sprintf( sql, "SELECT username FROM users WHERE username = '%s' AND password = '%s' AND expiry_date < '%s' AND enabled = 1", username, digpwd, expiry_date );
 	free( username );
 	free( password );
 	free( digpwd );
+	free( expiry_date );
 
 	ret = executeSQL( sql, handle );
 	free( sql );
