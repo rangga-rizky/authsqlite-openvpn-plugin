@@ -143,7 +143,6 @@ openvpn_plugin_func_v1 (openvpn_plugin_handle_t handle, const int type, const ch
 	free( username );
 	free( password );
 	free( digpwd );
-	free( expiry_date );
 
 	ret = executeSQL( sql, handle );
 	free( sql );
