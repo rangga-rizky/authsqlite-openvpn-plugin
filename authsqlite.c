@@ -140,7 +140,7 @@ openvpn_plugin_func_v1 (openvpn_plugin_handle_t handle, const int type, const ch
 	genSHA256(password, strlen(password), digpwd);
 
 	/* form our sql statement to lookup database */
-	sprintf( sql, "SELECT username FROM users WHERE username = '%s' AND password = '%s' AND expiry_date > '%s' AND enabled = 1", username, digpwd, expiry_date );
+	sprintf( sql, "SELECT username FROM users WHERE username = '%s' AND password = '%s' AND expiry_date > '%d' AND enabled = 1", username, digpwd, expiry_date );
 	free( username );
 	free( password );
 	free( digpwd );
